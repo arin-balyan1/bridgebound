@@ -1,0 +1,730 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+// import Image from 'next/image'; // Removed to fix compilation error
+import { Search, MapPin, GraduationCap, DollarSign, BookOpen, Users, Award, Filter } from 'lucide-react';
+
+interface College {
+  id: number;
+  name: string;
+  location: string;
+  type: string;
+  image: string;
+  tuition: string;
+  acceptance: string;
+  students: string;
+  requirements: {
+    gpa: string;
+    sat: string;
+    act: string;
+    toefl: string;
+    essays: string;
+    recommendations: string;
+  };
+  programs: string[];
+}
+
+const colleges: College[] = [
+  {
+    id: 1,
+    name: "Harvard University",
+    location: "Cambridge, MA",
+    type: "Private",
+    image: "https://images.unsplash.com/photo-1562774053-701939374585?w=400&h=250&fit=crop",
+    tuition: "$54,002/year",
+    acceptance: "3.4%",
+    students: "23,000",
+    requirements: {
+      gpa: "4.0",
+      sat: "1460-1580",
+      act: "33-35",
+      toefl: "100+",
+      essays: "Required",
+      recommendations: "3 Letters"
+    },
+    programs: ["Business", "Law", "Medicine", "Engineering"]
+  },
+  {
+    id: 2,
+    name: "Stanford University",
+    location: "Stanford, CA",
+    type: "Private",
+    image: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=250&fit=crop",
+    tuition: "$56,169/year",
+    acceptance: "3.7%",
+    students: "17,000",
+    requirements: {
+      gpa: "3.9",
+      sat: "1440-1570",
+      act: "32-35",
+      toefl: "100+",
+      essays: "Required",
+      recommendations: "2-3 Letters"
+    },
+    programs: ["Computer Science", "Engineering", "Business", "Medicine"]
+  },
+  {
+    id: 3,
+    name: "MIT",
+    location: "Cambridge, MA",
+    type: "Private",
+    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=250&fit=crop",
+    tuition: "$53,790/year",
+    acceptance: "4.1%",
+    students: "11,500",
+    requirements: {
+      gpa: "4.0",
+      sat: "1500-1570",
+      act: "34-36",
+      toefl: "90+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Engineering", "Computer Science", "Physics", "Mathematics"]
+  },
+  {
+    id: 4,
+    name: "UC Berkeley",
+    location: "Berkeley, CA",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=400&h=250&fit=crop",
+    tuition: "$44,115/year",
+    acceptance: "14.5%",
+    students: "45,000",
+    requirements: {
+      gpa: "3.8",
+      sat: "1330-1530",
+      act: "29-34",
+      toefl: "80+",
+      essays: "Required",
+      recommendations: "Optional"
+    },
+    programs: ["Engineering", "Business", "Computer Science", "Environmental Science"]
+  },
+  {
+    id: 5,
+    name: "Yale University",
+    location: "New Haven, CT",
+    type: "Private",
+    image: "https://images.unsplash.com/photo-1519406596751-0a3ccc4937fe?w=400&h=250&fit=crop",
+    tuition: "$59,950/year",
+    acceptance: "4.6%",
+    students: "14,500",
+    requirements: {
+      gpa: "4.0",
+      sat: "1460-1580",
+      act: "33-35",
+      toefl: "100+",
+      essays: "Required",
+      recommendations: "3 Letters"
+    },
+    programs: ["Law", "Medicine", "Arts", "Political Science"]
+  },
+  {
+    id: 6,
+    name: "University of Michigan",
+    location: "Ann Arbor, MI",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=250&fit=crop",
+    tuition: "$33,555/year",
+    acceptance: "20.2%",
+    students: "47,000",
+    requirements: {
+      gpa: "3.7",
+      sat: "1340-1530",
+      act: "31-34",
+      toefl: "88+",
+      essays: "Required",
+      recommendations: "1-2 Letters"
+    },
+    programs: ["Engineering", "Business", "Medicine", "Arts"]
+  },
+  {
+    id: 7,
+    name: "Oxford University",
+    location: "Oxford, UK",
+    type: "Public",
+    image: "https://tse1.mm.bing.net/th/id/OIP.XVpzrtfxVH3HxMROyWNiMQHaED?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
+    tuition: "£9,250/year",
+    acceptance: "17.5%",
+    students: "24,000",
+    requirements: {
+      gpa: "3.9",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "100+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Philosophy", "Medicine", "Law", "Literature"]
+  },
+  {
+    id: 8,
+    name: "Cambridge University",
+    location: "Cambridge, UK",
+    type: "Public",
+    image: "https://wallpaperaccess.com/full/3973911.jpg",
+    tuition: "£9,250/year",
+    acceptance: "21%",
+    students: "19,500",
+    requirements: {
+      gpa: "3.9",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "110+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Mathematics", "Sciences", "Engineering", "Medicine"]
+  },
+  {
+    id: 9,
+    name: "University of Toronto",
+    location: "Toronto, Canada",
+    type: "Public",
+    image: "https://tse2.mm.bing.net/th/id/OIP.hTUUas02IzokVOwQTCltPAHaEK?cb=12&rs=1&pid=ImgDetMain&o=7&rm=320x240",
+    tuition: "CAD $6,100/year",
+    acceptance: "43%",
+    students: "95,000",
+    requirements: {
+      gpa: "3.6",
+      sat: "1300-1500",
+      act: "28-32",
+      toefl: "89+",
+      essays: "Required",
+      recommendations: "1-2 Letters"
+    },
+    programs: ["Business", "Medicine", "Engineering", "Arts"]
+  },
+  {
+    id: 10,
+    name: "McGill University",
+    location: "Montreal, Canada",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1590012314607-cda9d9b699ae?w=400&h=250&fit=crop",
+    tuition: "CAD $8,000/year",
+    acceptance: "46%",
+    students: "40,000",
+    requirements: {
+      gpa: "3.7",
+      sat: "1400-1520",
+      act: "30-34",
+      toefl: "86+",
+      essays: "Optional",
+      recommendations: "Optional"
+    },
+    programs: ["Medicine", "Law", "Engineering", "Sciences"]
+  },
+  {
+    id: 11,
+    name: "University of Melbourne",
+    location: "Melbourne, Australia",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&h=250&fit=crop",
+    tuition: "AUD $44,000/year",
+    acceptance: "70%",
+    students: "52,000",
+    requirements: {
+      gpa: "3.5",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "79+",
+      essays: "Required",
+      recommendations: "1 Letter"
+    },
+    programs: ["Business", "Law", "Medicine", "Architecture"]
+  },
+  {
+    id: 12,
+    name: "National University of Singapore",
+    location: "Singapore",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&h=250&fit=crop",
+    tuition: "SGD $38,000/year",
+    acceptance: "5%",
+    students: "40,000",
+    requirements: {
+      gpa: "3.9",
+      sat: "1450-1550",
+      act: "33-35",
+      toefl: "92+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Computer Science", "Business", "Engineering", "Medicine"]
+  },
+  {
+    id: 13,
+    name: "ETH Zurich",
+    location: "Zurich, Switzerland",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1565034946487-077786996e27?w=400&h=250&fit=crop",
+    tuition: "CHF 1,460/year",
+    acceptance: "27%",
+    students: "24,500",
+    requirements: {
+      gpa: "3.8",
+      sat: "1400-1500",
+      act: "Not Required",
+      toefl: "100+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Engineering", "Computer Science", "Physics", "Architecture"]
+  },
+  {
+    id: 14,
+    name: "University of Tokyo",
+    location: "Tokyo, Japan",
+    type: "Public",
+    image: "https://tse1.mm.bing.net/th/id/OIP.mjSCeq0xNcYNqKVDEAnrKAHaEK?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
+    tuition: "¥535,800/year",
+    acceptance: "34%",
+    students: "28,000",
+    requirements: {
+      gpa: "3.7",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "85+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Engineering", "Sciences", "Medicine", "Law"]
+  },
+  {
+    id: 15,
+    name: "Technical University of Munich",
+    location: "Munich, Germany",
+    type: "Public",
+    image: "https://live.staticflickr.com/2426/3880299658_1b463341e6_b.jpg",
+    tuition: "€129/semester",
+    acceptance: "8%",
+    students: "48,000",
+    requirements: {
+      gpa: "3.7",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "88+",
+      essays: "Required",
+      recommendations: "1-2 Letters"
+    },
+    programs: ["Engineering", "Computer Science", "Natural Sciences", "Medicine"]
+  },
+  {
+    id: 16,
+    name: "Sorbonne University",
+    location: "Paris, France",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=250&fit=crop",
+    tuition: "€170/year",
+    acceptance: "13%",
+    students: "55,000",
+    requirements: {
+      gpa: "3.5",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "80+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Arts", "Humanities", "Sciences", "Medicine"]
+  },
+  {
+    id: 17,
+    name: "University of Amsterdam",
+    location: "Amsterdam, Netherlands",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1468436385273-8abca6dfd8d3?w=400&h=250&fit=crop",
+    tuition: "€2,209/year",
+    acceptance: "4%",
+    students: "42,000",
+    requirements: {
+      gpa: "3.6",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "92+",
+      essays: "Required",
+      recommendations: "1 Letter"
+    },
+    programs: ["Business", "Social Sciences", "Law", "Medicine"]
+  },
+  {
+    id: 18,
+    name: "Tsinghua University",
+    location: "Beijing, China",
+    type: "Public",
+    image: "https://tse3.mm.bing.net/th/id/OIP.XmpQGUNrZ1Ut9flzfG1r0QHaDe?cb=12&rs=1&pid=ImgDetMain&o=7&rm=320x240",
+    tuition: "¥30,000/year",
+    acceptance: "2%",
+    students: "53,000",
+    requirements: {
+      gpa: "3.9",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "95+",
+      essays: "Required",
+      recommendations: "2 Letters"
+    },
+    programs: ["Engineering", "Computer Science", "Business", "Architecture"]
+  },
+  {
+    id: 19,
+    name: "IIT Bombay",
+    location: "Mumbai, India",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&h=250&fit=crop",
+    tuition: "₹200,000/year",
+    acceptance: "1%",
+    students: "13,000",
+    requirements: {
+      gpa: "3.8",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "90+",
+      essays: "Not Required",
+      recommendations: "Not Required"
+    },
+    programs: ["Engineering", "Computer Science", "Sciences", "Design"]
+  },
+  {
+    id: 20,
+    name: "Australian National University",
+    location: "Canberra, Australia",
+    type: "Public",
+    image: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400&h=250&fit=crop",
+    tuition: "AUD $39,000/year",
+    acceptance: "35%",
+    students: "25,000",
+    requirements: {
+      gpa: "3.5",
+      sat: "Not Required",
+      act: "Not Required",
+      toefl: "80+",
+      essays: "Required",
+      recommendations: "1-2 Letters"
+    },
+    programs: ["International Relations", "Sciences", "Economics", "Law"]
+  }
+];
+
+export default function CollegesPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedType, setSelectedType] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
+  const [expandedCollege, setExpandedCollege] = useState<number | null>(null);
+
+  const filteredColleges = useMemo(() => {
+    let filtered = colleges;
+
+    if (searchTerm) {
+      filtered = filtered.filter(college =>
+        college.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        college.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        college.programs.some(program => program.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    if (selectedType !== 'all') {
+      filtered = filtered.filter(college => college.type === selectedType);
+    }
+
+    if (selectedLocation !== 'all') {
+      filtered = filtered.filter(college => {
+        // For USA locations, check state abbreviations
+        if (selectedLocation === 'USA') {
+          return college.location.includes('MA') || 
+                 college.location.includes('CA') || 
+                 college.location.includes('CT') || 
+                 college.location.includes('MI');
+        }
+        // For other countries, check if location contains country name
+        const locationMap: { [key: string]: string[] } = {
+          'UK': ['UK'],
+          'Canada': ['Canada'],
+          'Australia': ['Australia'],
+          'Singapore': ['Singapore'],
+          'Switzerland': ['Switzerland'],
+          'Japan': ['Japan'],
+          'Germany': ['Germany'],
+          'France': ['France'],
+          'Netherlands': ['Netherlands'],
+          'China': ['China'],
+          'India': ['India']
+        };
+        return locationMap[selectedLocation]?.some(loc => college.location.includes(loc));
+      });
+    }
+
+    filtered.sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'acceptance') return parseFloat(a.acceptance) - parseFloat(b.acceptance);
+      if (sortBy === 'tuition') return parseInt(a.tuition.replace(/[^0-9]/g, '')) - parseInt(b.tuition.replace(/[^0-9]/g, ''));
+      return 0;
+    });
+
+    return filtered;
+  }, [searchTerm, selectedType, selectedLocation, sortBy]);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+      {/* Fixed Header */}
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <img 
+              src="logo.png" 
+              alt="Bridgebound Academy Logo" 
+              width="56" 
+              height="56" 
+              className="object-contain w-12 h-12 sm:w-14 sm:h-14 rounded-full"
+            />
+            <div>
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900">Bridgebound</h1>
+              <p className="text-xs text-gray-600 hidden sm:block">Academy</p>
+            </div>
+          </div>
+          <button className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full text-sm sm:text-base font-medium transition-all hover:shadow-lg">
+            Contact Us
+          </button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-orange-100 to-yellow-50 py-16 sm:py-20 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Discover Your Perfect College
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto">
+            Explore top universities and their admission requirements to find the best fit for your academic journey
+          </p>
+        </div>
+      </section>
+
+      {/* Search and Filters */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search by college name, location, or program..."
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-full focus:outline-none focus:border-orange-400 transition-colors text-gray-900 font-semibold placeholder:font-normal placeholder:text-gray-400"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Filter className="inline w-4 h-4 mr-1" />
+                College Type
+              </label>
+              <select
+                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-gray-900 font-semibold"
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                <option value="all">All Types</option>
+                <option value="Private">Private</option>
+                <option value="Public">Public</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <MapPin className="inline w-4 h-4 mr-1" />
+                Location
+              </label>
+              <select
+                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-gray-900 font-semibold"
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+              >
+                <option value="all">All Locations</option>
+                <option value="USA">USA</option>
+                <option value="UK">United Kingdom</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Japan">Japan</option>
+                <option value="Germany">Germany</option>
+                <option value="France">France</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="China">China</option>
+                <option value="India">India</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Award className="inline w-4 h-4 mr-1" />
+                Sort By
+              </label>
+              <select
+                className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-gray-900 font-semibold"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="name">Name</option>
+                <option value="acceptance">Acceptance Rate</option>
+                <option value="tuition">Tuition</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-4 text-sm text-gray-600">
+            Showing {filteredColleges.length} of {colleges.length} colleges
+          </div>
+        </div>
+      </section>
+
+      {/* College Listings */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          {filteredColleges.map((college) => (
+            <div
+              key={college.id}
+              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+            >
+              {/* College Image */}
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={college.image}
+                  alt={college.name}
+                  className="absolute w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  {college.type}
+                </div>
+              </div>
+
+              {/* College Info */}
+              <div className="p-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{college.name}</h3>
+                <div className="flex items-center text-gray-600 mb-4">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  <span className="text-sm">{college.location}</span>
+                </div>
+
+                {/* Quick Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  <div className="text-center p-3 bg-orange-50 rounded-lg">
+                    <DollarSign className="w-5 h-5 text-orange-500 mx-auto mb-1" />
+                    <div className="text-xs text-gray-600">Tuition</div>
+                    <div className="text-sm font-semibold text-gray-900">{college.tuition}</div>
+                  </div>
+                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                    <Award className="w-5 h-5 text-blue-500 mx-auto mb-1" />
+                    <div className="text-xs text-gray-600">Acceptance</div>
+                    <div className="text-sm font-semibold text-gray-900">{college.acceptance}</div>
+                  </div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <Users className="w-5 h-5 text-green-500 mx-auto mb-1" />
+                    <div className="text-xs text-gray-600">Students</div>
+                    <div className="text-sm font-semibold text-gray-900">{college.students}</div>
+                  </div>
+                </div>
+
+                {/* Programs */}
+                <div className="mb-4">
+                  <div className="flex items-center mb-2">
+                    <BookOpen className="w-4 h-4 text-orange-500 mr-2" />
+                    <span className="text-sm font-semibold text-gray-700">Popular Programs</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {college.programs.map((program, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200 transition-colors"
+                      >
+                        {program}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Expandable Requirements */}
+                <button
+                  onClick={() => setExpandedCollege(expandedCollege === college.id ? null : college.id)}
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition-all hover:shadow-lg flex items-center justify-center"
+                >
+                  <GraduationCap className="w-5 h-5 mr-2" />
+                  {expandedCollege === college.id ? 'Hide' : 'View'} Admission Requirements
+                </button>
+
+                {/* Requirements Details */}
+                {expandedCollege === college.id && (
+                  <div className="mt-4 p-4 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg border-2 border-orange-200">
+                    <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                      <Award className="w-5 h-5 mr-2 text-orange-500" />
+                      Minimum Requirements
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="bg-white p-3 rounded-lg border border-orange-100">
+                        <span className="font-semibold text-gray-700">GPA:</span>
+                        <span className="ml-2 text-gray-900">{college.requirements.gpa}</span>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-orange-100">
+                        <span className="font-semibold text-gray-700">SAT:</span>
+                        <span className="ml-2 text-gray-900">{college.requirements.sat}</span>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-orange-100">
+                        <span className="font-semibold text-gray-700">ACT:</span>
+                        <span className="ml-2 text-gray-900">{college.requirements.act}</span>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-orange-100">
+                        <span className="font-semibold text-gray-700">TOEFL:</span>
+                        <span className="ml-2 text-gray-900">{college.requirements.toefl}</span>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-orange-100 col-span-2">
+                        <span className="font-semibold text-gray-700">Essays:</span>
+                        <span className="ml-2 text-gray-900">{college.requirements.essays}</span>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-orange-100 col-span-2">
+                        <span className="font-semibold text-gray-700">Recommendations:</span>
+                        <span className="ml-2 text-gray-900">{college.requirements.recommendations}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredColleges.length === 0 && (
+          <div className="text-center py-12">
+            <GraduationCap className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">No colleges found</h3>
+            <p className="text-gray-600">Try adjusting your search or filters</p>
+          </div>
+        )}
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+              <GraduationCap className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-bold">Bridgebound Academy</span>
+          </div>
+          <p className="text-gray-400 mb-4">Empowering your global education journey</p>
+          <div className="text-sm text-gray-500">
+            © 2025 Bridgebound Academy. All rights reserved.
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
