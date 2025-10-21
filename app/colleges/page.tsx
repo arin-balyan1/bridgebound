@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+// Note: Removed 'next/image' to resolve compilation error in this environment.
+// Using the standard `<img>` tag for compatibility.
 import { Search, MapPin, GraduationCap, DollarSign, BookOpen, Users, Award, Filter } from 'lucide-react';
 
 // Interface defining the structure for a college object
@@ -24,14 +26,15 @@ interface College {
   programs: string[];
 }
 
-// Static data for the list of colleges
+// Static data for the list of colleges.
+// Image paths must be relative to the `public` folder.
 const colleges: College[] = [
-  {
+    {
     id: 1,
     name: "Harvard University",
     location: "Cambridge, MA",
     type: "Private",
-    image: "harvard.webp",
+    image: "/harvard.webp",
     tuition: "$54,002/year",
     acceptance: "3.4%",
     students: "23,000",
@@ -43,7 +46,7 @@ const colleges: College[] = [
     name: "Stanford University",
     location: "Stanford, CA",
     type: "Private",
-    image: "stanford.webp",
+    image: "/stanford.webp",
     tuition: "$56,169/year",
     acceptance: "3.7%",
     students: "17,000",
@@ -55,7 +58,7 @@ const colleges: College[] = [
     name: "MIT",
     location: "Cambridge, MA",
     type: "Private",
-    image: "mit.jpg",
+    image: "/mit.jpg",
     tuition: "$53,790/year",
     acceptance: "4.1%",
     students: "11,500",
@@ -67,7 +70,7 @@ const colleges: College[] = [
     name: "UC Berkeley",
     location: "Berkeley, CA",
     type: "Public",
-    image: "ucberkley.jpg",
+    image: "/ucberkley.jpg",
     tuition: "$44,115/year",
     acceptance: "14.5%",
     students: "45,000",
@@ -79,7 +82,7 @@ const colleges: College[] = [
     name: "Yale University",
     location: "New Haven, CT",
     type: "Private",
-    image: "yale.jpeg",
+    image: "/yale.jpeg",
     tuition: "$59,950/year",
     acceptance: "4.6%",
     students: "14,500",
@@ -91,7 +94,7 @@ const colleges: College[] = [
     name: "Oxford University",
     location: "Oxford, UK",
     type: "Public",
-    image: "oxford.jpeg",
+    image: "/oxford.jpeg",
     tuition: "£9,250/year",
     acceptance: "17.5%",
     students: "24,000",
@@ -103,7 +106,7 @@ const colleges: College[] = [
     name: "Cambridge University",
     location: "Cambridge, UK",
     type: "Public",
-    image: "cambridge.jpg",
+    image: "/cambridge.jpg",
     tuition: "£9,250/year",
     acceptance: "21%",
     students: "19,500",
@@ -115,7 +118,7 @@ const colleges: College[] = [
     name: "University of Toronto",
     location: "Toronto, Canada",
     type: "Public",
-    image: "toronto.jpeg",
+    image: "/toronto.jpeg",
     tuition: "CAD $6,100/year",
     acceptance: "43%",
     students: "95,000",
@@ -127,7 +130,7 @@ const colleges: College[] = [
     name: "McGill University",
     location: "Montreal, Canada",
     type: "Public",
-    image: "mcgill.jpg",
+    image: "/mcgill.jpg",
     tuition: "CAD $8,000/year",
     acceptance: "46%",
     students: "40,000",
@@ -139,7 +142,7 @@ const colleges: College[] = [
     name: "University of Melbourne",
     location: "Melbourne, Australia",
     type: "Public",
-    image: "melbourne.jpeg",
+    image: "/melbourne.jpeg",
     tuition: "AUD $44,000/year",
     acceptance: "70%",
     students: "52,000",
@@ -151,7 +154,7 @@ const colleges: College[] = [
     name: "National University of Singapore",
     location: "Singapore",
     type: "Public",
-    image: "singapore.jpeg",
+    image: "/singapore.jpeg",
     tuition: "SGD $38,000/year",
     acceptance: "5%",
     students: "40,000",
@@ -163,7 +166,7 @@ const colleges: College[] = [
     name: "ETH Zurich",
     location: "Zurich, Switzerland",
     type: "Public",
-    image: "zurich.jpeg",
+    image: "/zurich.jpeg",
     tuition: "CHF 1,460/year",
     acceptance: "27%",
     students: "24,500",
@@ -175,7 +178,7 @@ const colleges: College[] = [
     name: "University of Tokyo",
     location: "Tokyo, Japan",
     type: "Public",
-    image: "tokyo.webp",
+    image: "/tokyo.webp",
     tuition: "¥535,800/year",
     acceptance: "34%",
     students: "28,000",
@@ -187,7 +190,7 @@ const colleges: College[] = [
     name: "Technical University of Munich",
     location: "Munich, Germany",
     type: "Public",
-    image: "munich.jpeg",
+    image: "/munich.jpeg",
     tuition: "€129/semester",
     acceptance: "8%",
     students: "48,000",
@@ -199,7 +202,7 @@ const colleges: College[] = [
     name: "Sorbonne University",
     location: "Paris, France",
     type: "Public",
-    image: "sorbonne.jpeg",
+    image: "/sorbonne.jpeg",
     tuition: "€170/year",
     acceptance: "13%",
     students: "55,000",
@@ -211,7 +214,7 @@ const colleges: College[] = [
     name: "University of Amsterdam",
     location: "Amsterdam, Netherlands",
     type: "Public",
-    image: "amsterdam.jpeg",
+    image: "/amsterdam.jpeg",
     tuition: "€2,209/year",
     acceptance: "4%",
     students: "42,000",
@@ -223,7 +226,7 @@ const colleges: College[] = [
     name: "Tsinghua University",
     location: "Beijing, China",
     type: "Public",
-    image: "Tsinghua.jpeg",
+    image: "/Tsinghua.jpeg",
     tuition: "¥30,000/year",
     acceptance: "2%",
     students: "53,000",
@@ -231,6 +234,7 @@ const colleges: College[] = [
     programs: ["Engineering", "Computer Science", "Business", "Architecture"]
   }
 ];
+
 
 // Main component for the college finder page
 export default function CollegesPage() {
@@ -259,18 +263,9 @@ export default function CollegesPage() {
 
     if (selectedLocation !== 'all') {
       const locationMap: { [key: string]: string[] } = {
-        'USA': ['MA', 'CA', 'CT', 'MI'],
-        'UK': ['UK'],
-        'Canada': ['Canada'],
-        'Australia': ['Australia'],
-        'Singapore': ['Singapore'],
-        'Switzerland': ['Switzerland'],
-        'Japan': ['Japan'],
-        'Germany': ['Germany'],
-        'France': ['France'],
-        'Netherlands': ['Netherlands'],
-        'China': ['China'],
-        'India': ['India']
+        'USA': ['MA', 'CA', 'CT', 'MI'], 'UK': ['UK'], 'Canada': ['Canada'], 'Australia': ['Australia'], 'Singapore': ['Singapore'],
+        'Switzerland': ['Switzerland'], 'Japan': ['Japan'], 'Germany': ['Germany'], 'France': ['France'],
+        'Netherlands': ['Netherlands'], 'China': ['China'], 'India': ['India']
       };
       const locations = locationMap[selectedLocation];
       if(locations) {
@@ -295,15 +290,14 @@ export default function CollegesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white font-sans">
-      {/* Fixed Header */}
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <img 
-              src="https://placehold.co/56x56/F97316/FFFFFF?text=BA" 
-              alt="Bridgebound Academy Logo" 
-              width="56" 
-              height="56" 
+            <img
+              src="/logo.png"
+              alt="Bridgebound Academy Logo"
+              width="56"
+              height="56"
               className="object-cover w-12 h-12 sm:w-14 sm:h-14 rounded-lg"
             />
             <div>
@@ -317,7 +311,6 @@ export default function CollegesPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
       <main>
         <section className="bg-gradient-to-r from-orange-100 to-yellow-50 py-16 sm:py-20 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -330,7 +323,6 @@ export default function CollegesPage() {
           </div>
         </section>
 
-        {/* Search and Filters */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-16">
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <div className="mb-6">
@@ -348,11 +340,12 @@ export default function CollegesPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="college-type" className="block text-sm font-medium text-gray-700 mb-2">
                   <Filter className="inline w-4 h-4 mr-1" />
                   College Type
                 </label>
                 <select
+                  id="college-type"
                   className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-gray-900 font-semibold"
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
@@ -364,11 +357,12 @@ export default function CollegesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
                   <MapPin className="inline w-4 h-4 mr-1" />
                   Location
                 </label>
                 <select
+                  id="location"
                   className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-gray-900 font-semibold"
                   value={selectedLocation}
                   onChange={(e) => setSelectedLocation(e.target.value)}
@@ -390,11 +384,12 @@ export default function CollegesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-2">
                   <Award className="inline w-4 h-4 mr-1" />
                   Sort By
                 </label>
                 <select
+                  id="sort-by"
                   className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-400 text-gray-900 font-semibold"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
@@ -412,20 +407,19 @@ export default function CollegesPage() {
           </div>
         </section>
 
-        {/* College Listings */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             {filteredColleges.length > 0 ? (
-                filteredColleges.map((college) => (
+                filteredColleges.map((college, index) => (
                 <div key={college.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={college.image}
                       alt={`Campus of ${college.name}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
                       width="400"
                       height="250"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      loading={index < 4 ? 'eager' : 'lazy'} // Prioritize loading for the first few images
                     />
                     <div className="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                       {college.type}
@@ -509,7 +503,6 @@ export default function CollegesPage() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
