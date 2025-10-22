@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -289,7 +290,7 @@ export default function CollegesPage() {
   }, [searchTerm, selectedType, selectedLocation, sortBy]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white font-sans tracking-body">
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-3">
@@ -301,7 +302,7 @@ export default function CollegesPage() {
               className="object-cover w-12 h-12 sm:w-14 sm:h-14 rounded-lg"
             />
             <div>
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900">Bridgebound</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 font-heading tracking-heading">Bridgebound</h1>
               <p className="text-xs text-gray-600 hidden sm:block">Academy</p>
             </div>
           </div>
@@ -314,7 +315,7 @@ export default function CollegesPage() {
       <main>
         <section className="bg-gradient-to-r from-orange-100 to-yellow-50 py-16 sm:py-20 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight font-heading tracking-heading">
               Discover Your Perfect College
             </h2>
             <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto">
@@ -427,7 +428,7 @@ export default function CollegesPage() {
                   </div>
 
                   <div className="p-6">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{college.name}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 font-heading tracking-heading">{college.name}</h3>
                     <div className="flex items-center text-gray-600 mb-4">
                       <MapPin className="w-4 h-4 mr-1.5" />
                       <span className="text-sm">{college.location}</span>
@@ -437,24 +438,24 @@ export default function CollegesPage() {
                       <div className="text-center p-3 bg-orange-50 rounded-lg">
                         <DollarSign className="w-5 h-5 text-orange-500 mx-auto mb-1" />
                         <div className="text-xs text-gray-600">Tuition</div>
-                        <div className="text-sm font-semibold text-gray-900">{college.tuition}</div>
+                        <div className="text-sm font-semibold text-gray-900 font-heading">{college.tuition}</div>
                       </div>
                       <div className="text-center p-3 bg-blue-50 rounded-lg">
                         <Award className="w-5 h-5 text-blue-500 mx-auto mb-1" />
                         <div className="text-xs text-gray-600">Acceptance</div>
-                        <div className="text-sm font-semibold text-gray-900">{college.acceptance}</div>
+                        <div className="text-sm font-semibold text-gray-900 font-heading">{college.acceptance}</div>
                       </div>
                       <div className="text-center p-3 bg-green-50 rounded-lg">
                         <Users className="w-5 h-5 text-green-500 mx-auto mb-1" />
                         <div className="text-xs text-gray-600">Students</div>
-                        <div className="text-sm font-semibold text-gray-900">{college.students}</div>
+                        <div className="text-sm font-semibold text-gray-900 font-heading">{college.students}</div>
                       </div>
                     </div>
 
                     <div className="mb-4">
                       <div className="flex items-center mb-2">
                         <BookOpen className="w-4 h-4 text-orange-500 mr-2" />
-                        <h4 className="text-sm font-semibold text-gray-700">Popular Programs</h4>
+                        <h4 className="text-sm font-semibold text-gray-700 font-heading tracking-heading">Popular Programs</h4>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {college.programs.map((program) => (
@@ -475,15 +476,15 @@ export default function CollegesPage() {
 
                     {expandedCollege === college.id && (
                       <div className="mt-4 p-4 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg border-2 border-orange-200">
-                        <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                        <h4 className="font-bold text-gray-900 mb-3 flex items-center font-heading tracking-heading">
                           <Award className="w-5 h-5 mr-2 text-orange-500" />
                           Minimum Requirements
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">GPA:</span><span className="ml-2 text-gray-900">{college.requirements.gpa}</span></div>
-                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">SAT:</span><span className="ml-2 text-gray-900">{college.requirements.sat}</span></div>
-                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">ACT:</span><span className="ml-2 text-gray-900">{college.requirements.act}</span></div>
-                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">TOEFL:</span><span className="ml-2 text-gray-900">{college.requirements.toefl}</span></div>
+                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">GPA:</span><span className="ml-2 text-gray-900 font-heading">{college.requirements.gpa}</span></div>
+                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">SAT:</span><span className="ml-2 text-gray-900 font-heading">{college.requirements.sat}</span></div>
+                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">ACT:</span><span className="ml-2 text-gray-900 font-heading">{college.requirements.act}</span></div>
+                          <div className="bg-white p-3 rounded-lg border border-orange-100"><span className="font-semibold text-gray-700">TOEFL:</span><span className="ml-2 text-gray-900 font-heading">{college.requirements.toefl}</span></div>
                           <div className="bg-white p-3 rounded-lg border border-orange-100 md:col-span-2"><span className="font-semibold text-gray-700">Essays:</span><span className="ml-2 text-gray-900">{college.requirements.essays}</span></div>
                           <div className="bg-white p-3 rounded-lg border border-orange-100 md:col-span-2"><span className="font-semibold text-gray-700">Recommendations:</span><span className="ml-2 text-gray-900">{college.requirements.recommendations}</span></div>
                         </div>
@@ -495,7 +496,7 @@ export default function CollegesPage() {
             ) : (
               <div className="text-center py-12 col-span-1 lg:col-span-2">
                 <GraduationCap className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">No colleges found</h3>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2 font-heading tracking-heading">No colleges found</h3>
                 <p className="text-gray-600">Try adjusting your search or filters.</p>
               </div>
             )}
@@ -509,7 +510,7 @@ export default function CollegesPage() {
             <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
               <GraduationCap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold">Bridgebound Academy</span>
+            <span className="text-xl font-bold font-heading tracking-heading">Bridgebound Academy</span>
           </div>
           <p className="text-gray-400 mb-4">Empowering your global education journey.</p>
           <div className="text-sm text-gray-500">
@@ -520,4 +521,3 @@ export default function CollegesPage() {
     </div>
   );
 }
-
